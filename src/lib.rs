@@ -44,7 +44,9 @@ impl SorobanThreatNet {
         }
         admin.require_auth();
         env.storage().instance().set(&DataKey::Admin, &admin);
-        env.storage().instance().set(&DataKey::TotalIndicators, &0u32);
+        env.storage()
+            .instance()
+            .set(&DataKey::TotalIndicators, &0u32);
     }
 
     /// Publish (insert or update) a threat indicator hash on the ledger.
@@ -58,7 +60,11 @@ impl SorobanThreatNet {
         threat_level: ThreatLevel,
         reputation_score: u32,
     ) {
-        let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).expect("Not initialized");
+        let stored_admin: Address = env
+            .storage()
+            .instance()
+            .get(&DataKey::Admin)
+            .expect("Not initialized");
         admin.require_auth();
         if admin != stored_admin {
             panic!("Unauthorized admin");
@@ -82,14 +88,18 @@ impl SorobanThreatNet {
                 .instance()
                 .get(&DataKey::TotalIndicators)
                 .unwrap_or(0);
-            env.storage().instance().set(&DataKey::TotalIndicators, &(count + 1));
+            env.storage()
+                .instance()
+                .set(&DataKey::TotalIndicators, &(count + 1));
         }
         env.storage().persistent().set(&key, &record);
     }
 
     /// Query an indicator record on-chain (zero-trust client verification).
     pub fn get_threat_indicator(env: Env, indicator_hash: BytesN<32>) -> Option<IndicatorRecord> {
-        env.storage().persistent().get(&DataKey::Indicator(indicator_hash))
+        env.storage()
+            .persistent()
+            .get(&DataKey::Indicator(indicator_hash))
     }
 
     /// Total number of published threat indicators.
@@ -119,7 +129,12 @@ mod test {
         client.initialize(&admin);
 
         let test_hash = BytesN::from_array(&env, &[7u8; 32]);
-        client.publish_threat_indicator(&admin, &test_hash, &ThreatLevel::ConfirmedMalicious, &10u32);
+        client.publish_threat_indicator(
+            &admin,
+            &test_hash,
+            &ThreatLevel::ConfirmedMalicious,
+            &10u32,
+        );
 
         let fetched = client.get_threat_indicator(&test_hash).unwrap();
         assert_eq!(fetched.reputation_score, 10u32);
