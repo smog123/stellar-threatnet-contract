@@ -53,6 +53,20 @@ soroban contract invoke --id <CONTRACT_ID> --source <admin-secret> --network tes
   -- initialize --admin <ADMIN_ADDRESS>
 ```
 
+> Note: the maintained stellar-cli is a drop-in for `soroban`; for deploy it
+> needs `--rpc-url` plus `--network-passphrase` (the deploy script resolves the
+> passphrase from `NETWORK` automatically).
+
+## Deployed addresses
+
+| Network | Contract ID |
+| --- | --- |
+| Testnet | [`CB34YG3ZGQ3FGK32D6GMMFKKK4SPWN5QURF4VCCQ67ZHBILJBH2KBCG5`](https://stellar.expert/explorer/testnet/contract/CB34YG3ZGQ3FGK32D6GMMFKKK4SPWN5QURF4VCCQ67ZHBILJBH2KBCG5) |
+
+Deployed 2026-08-08 via `scripts/deploy.sh` (stellar-cli 27.1.0);
+`initialize(admin: GASHO6ZALWWEDTLUSXWSLMWBLX3EK3PXJMJX5IBCYQKVQDMJARHP3HYL)`
+executed once. Mainnet deployment is pending.
+
 ## Security notes
 
 - Only the admin can publish. Rotation requires a governance change.

@@ -17,6 +17,14 @@ NETWORK="${NETWORK:-testnet}"
 RPC_URL="${RPC_URL:-https://soroban-testnet.stellar.org}"
 WASM="target/wasm32v1-none/release/soroban_threatnet.wasm"
 
+# stellar-cli (the maintained successor of soroban-cli) requires a network
+# passphrase when --rpc-url is given. Resolve it from the network name.
+case "$NETWORK" in
+  testnet)  NETWORK_PASSPHRASE="${NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}" ;;
+  mainnet)  NETWORK_PASSPHRASE="${NETWORK_PASSPHRASE:-Public Global Stellar Network ; September 2015}" ;;
+  *)        NETWORK_PASSPHRASE="${NETWORK_PASSPHRASE:?Set NETWORK_PASSPHRASE for custom networks}" ;;
+esac
+
 : "${ADMIN_SECRET:?Set ADMIN_SECRET (admin signing key secret).}"
 : "${ADMIN_ADDRESS:?Set ADMIN_ADDRESS (public key of the admin).}"
 
@@ -27,8 +35,8 @@ echo "==> [2/4] Deploying contract to ${NETWORK}"
 CONTRACT_ID="$(soroban contract deploy \
   --wasm "$WASM" \
   --source "$ADMIN_SECRET" \
-  --network "$NETWORK" \
-  --rpc-url "$RPC_URL")"
+  --rpc-url "$RPC_URL" \
+  --network-passphrase "$NETWORK_PASSPHRASE")"
 echo "    deployed: ${CONTRACT_ID}"
 
 echo "==> [3/4] Calling initialize(admin=${ADMIN_ADDRESS})"

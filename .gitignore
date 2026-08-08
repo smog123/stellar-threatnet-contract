@@ -1,0 +1,12 @@
+# Rust / cargo
+/target
+**/*.rs.bk
+
+# Soroban CLI
+.soroban/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
